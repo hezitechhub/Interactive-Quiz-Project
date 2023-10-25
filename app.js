@@ -1,13 +1,11 @@
+
+//it would be nice to have these quetions generated from the database, using a sweet framework, springboot and mysql database
 var quiz = {
-    "JS": [{
+    "JS": [
+        {
             "id": 1,
             "question": "Inside which HTML element do we put the JavaScript?",
-            "options": [{
-                "a": "&lt;script&gt;",
-                "b": "&lt;javascript&gt;",
-                "c": "&lt;scripting&gt;",
-                "d": "&lt;js&gt;"
-            }],
+            "options": ["&lt;script&gt;", "&lt;javascript&gt;", "&lt;scripting&gt;", "&lt;js&gt;"],
             "answer": "&lt;script&gt;",
             "score": 0,
             "status": ""
@@ -15,11 +13,7 @@ var quiz = {
         {
             "id": 2,
             "question": "Where is the correct place to insert a JavaScript?",
-            "options": [{
-                "a": "The &lt;head&gt; section",
-                "b": "The &lt;body&gt; section",
-                "c": "Both the &lt;head&gt; section and the &lt;body&gt; section are correct"
-            }],
+            "options": ["The &lt;head&gt; section", "The &lt;body&gt; section", "Both the &lt;head&gt; section and the &lt;body&gt; section are correct"],
             "answer": "Both the &lt;head&gt; section and the &lt;body&gt; section are correct",
             "score": 0,
             "status": ""
@@ -27,22 +21,15 @@ var quiz = {
         {
             "id": 3,
             "question": "What is the correct syntax for referring to an external script called 'xxx.js'?",
-            "options": [{
-                "a": "&ltscript href=&quot;xxx.js&quot;>",
-                "b": "&lt;script name=&quot;xxx.js&quot;&gt;",
-                "c": "&lt;script src=&quot;xxx.js&quot;&gt;"
-            }],
-            "answer": "&lt;script src=&quot;xxx.js&quot;&gt;",
+            "options": ["&ltscript href=&quot;xxx.js&quot;", "&lt;script name=&quot;xxx.js&quot;", "&lt;script src=&quot;xxx.js&quot;"],
+            "answer": "&lt;script src=&quot;xxx.js&quot;",
             "score": 0,
             "status": ""
         },
         {
             "id": 4,
             "question": "The external JavaScript file must contain the &lt;script&gt; tag.",
-            "options": [{
-                "a": "True",
-                "b": "False"
-            }],
+            "options": ["True", "False"],
             "answer": "False",
             "score": 0,
             "status": ""
@@ -50,81 +37,127 @@ var quiz = {
         {
             "id": 5,
             "question": "How do you write &quot;Hello World&quot; in an alert box?",
-            "options": [{
-                "a": "alertBox(&quot;Hello World&quot;);",
-                "b": "msg(&quot;Hello World&quot;);",
-                "c": "alert(&quot;Hello World&quot;);",
-                "d": "msgBox(&quot;Hello World&quot;);",
-            }],
+            "options": ["alertBox(&quot;Hello World&quot;);", "msg(&quot;Hello World&quot;);", "alert(&quot;Hello World&quot;);", "msgBox(&quot;Hello World&quot;);"],
             "answer": "alert(&quot;Hello World&quot;);",
             "score": 0,
             "status": ""
         },
-       
+        // Additional Questions that have added, asaph zulu
+        {
+            "id": 6,
+            "question": "What is the result of 2 + 2?",
+            "options": ["3", "4", "5", "6"],
+            "answer": "4",
+            "score": 0,
+            "status": ""
+        },
+        {
+            "id": 7,
+            "question": "Which keyword is used to declare a variable in JavaScript?",
+            "options": ["var", "let", "const", "variable"],
+            "answer": "var",
+            "score": 0,
+            "status": ""
+        },
+        {
+            "id": 8,
+            "question": "What does 'HTML' stand for?",
+            "options": ["Hyperlink Text Markup Language", "Hyper Text Makeup Language", "Hyper Text Markup Language", "Highly Text Markup Language"],
+            "answer": "Hyper Text Markup Language",
+            "score": 0,
+            "status": ""
+        },
+        {
+            "id": 9,
+            "question": "Which event is triggered when a user clicks a button?",
+            "options": ["onmouseover", "onchange", "onclick", "onsubmit"],
+            "answer": "onclick",
+            "score": 0,
+            "status": ""
+        },
+        {
+            "id": 10,
+            "question": "What is the result of '5' + 3 in JavaScript?",
+            "options": ["8", "53", "5+3", "NaN"],
+            "answer": "53",
+            "score": 0,
+            "status": ""
+        }
     ]
 }
-var quizApp = function() {
+
+var quizApp = function () {
     this.score = 0;
     this.qno = 1;
     this.currentque = 0;
     var totalque = quiz.JS.length;
-    this.displayQuiz = function(cque) {
+
+    this.displayQuiz = function (cque) {
         this.currentque = cque;
         if (this.currentque < totalque) {
+            
+            $("#qno").html(quiz.JS[this.currentque].id);
             $("#tque").html(totalque);
-            $("#previous").attr("disabled", false);
-            $("#next").attr("disabled", false);
-            $("#qid").html(quiz.JS[this.currentque].id + '.');
+
+           
+            $("#previous").prop("disabled", this.currentque <= 0);
+            $("#next").prop("disabled", this.currentque >= totalque);
+
+            
             $("#question").html(quiz.JS[this.currentque].question);
             $("#question-options").html("");
-            for (var key in quiz.JS[this.currentque].options[0]) {
-                if (quiz.JS[this.currentque].options[0].hasOwnProperty(key)) {
-                    $("#question-options").append(
-                        "<div class='form-check option-block'>" +
-                        "<label class='form-check-label'>" +
-                        "<input type='radio' class='form-check-input' name='option' id='q" + key + "' value='" + quiz.JS[this.currentque].options[0][key] + "'><span id='optionval'>" +
-                        quiz.JS[this.currentque].options[0][key] +
-                        "</span></label>"
-                    );
-                }
+
+            for (var i = 0; i < quiz.JS[this.currentque].options.length; i++) {
+                // am displaying options as radio buttons
+                $("#question-options").append(
+                    `<div class='form-check option-block'>
+                        <label class='form-check-label'>
+                            <input type='radio' class='form-check-input' name='option' id='q${i}' value='${quiz.JS[this.currentque].options[i]}'>
+                            <span class='optionval'>${quiz.JS[this.currentque].options[i]}</span>
+                        </label>
+                    </div>`
+                );
             }
         }
-        if (this.currentque <= 0) {
-            $("#previous").attr("disabled", true);
-        }
+
         if (this.currentque >= totalque) {
-            $('#next').attr('disabled', true);
+            
             for (var i = 0; i < totalque; i++) {
-                this.score = this.score + quiz.JS[i].score;
+                this.score += quiz.JS[i].score;
             }
             return this.showResult(this.score);
         }
     }
-    this.showResult = function(scr) {
+
+    this.showResult = function (scr) {
+     
         $("#result").addClass('result');
-        $("#result").html("<h1 class='res-header'>Total Score: &nbsp;" + scr + '/' + totalque + "</h1>");
-        for (var j = 0; j < totalque; j++) {
+        $("#result").html(`<h1 class='res-header'>Total Score: &nbsp;${scr}/${totalque}</h1>`);
+
+        for (var i = 0; i < totalque; i++) {
             var res;
-            if (quiz.JS[j].score == 0) {
-                res = '<span class="wrong">' + quiz.JS[j].score + '</span><i class="fa fa-remove c-wrong"></i>';
+            if (quiz.JS[i].score === 0) {
+                res = `<span class='wrong'>${quiz.JS[i].score}</span><i class='fa fa-remove c-wrong'></i>`;
             } else {
-                res = '<span class="correct">' + quiz.JS[j].score + '</span><i class="fa fa-check c-correct"></i>';
+                res = `<span class='correct'>${quiz.JS[i].score}</span><i class='fa fa-check c-correct'></i>`;
             }
+
             $("#result").append(
-                '<div class="result-question"><span>Q ' + quiz.JS[j].id + '</span> &nbsp;' + quiz.JS[j].question + '</div>' +
-                '<div><b>Correct answer:</b> &nbsp;' + quiz.JS[j].answer + '</div>' +
-                '<div class="last-row"><b>Score:</b> &nbsp;' + res +
-                '</div>'
+                `<div class='result-question'>
+                    <span>Q ${quiz.JS[i].id}</span> &nbsp;${quiz.JS[i].question}
+                </div>
+                <div><b>Correct answer:</b> &nbsp;${quiz.JS[i].answer}</div>
+                <div class='last-row'><b>Score:</b> &nbsp;${res}</div>`
             );
         }
     }
-    this.checkAnswer = function(option) {
+
+    this.checkAnswer = function (option) {
+        
         var answer = quiz.JS[this.currentque].answer;
-        option = option.replace(/</g, "&lt;") //for <
-        option = option.replace(/>/g, "&gt;") //for >
-        option = option.replace(/"/g, "&quot;")
-        if (option == quiz.JS[this.currentque].answer) {
-            if (quiz.JS[this.currentque].score == "") {
+        option = option.replace(/</g, "&lt;"); // Sanitizing the option here
+        if (option === answer) {
+            if (quiz.JS[this.currentque].score === 0) {
                 quiz.JS[this.currentque].score = 1;
                 quiz.JS[this.currentque].status = "correct";
             }
@@ -132,29 +165,38 @@ var quizApp = function() {
             quiz.JS[this.currentque].status = "wrong";
         }
     }
-    this.changeQuestion = function(cque) {
-        this.currentque = this.currentque + cque;
+
+    this.changeQuestion = function (cque) {
+        
+        this.currentque += cque;
         this.displayQuiz(this.currentque);
     }
 }
+
 var jsq = new quizApp();
-var selectedopt;
-$(document).ready(function() {
+
+$(document).ready(function () {
+    
     jsq.displayQuiz(0);
-    $('#question-options').on('change', 'input[type=radio][name=option]', function(e) {
-        //var radio = $(this).find('input:radio');
-        $(this).prop("checked", true);
-        selectedopt = $(this).val();
+
+    $('#question-options').on('change', 'input[type=radio][name=option]', function (e) {
+        
+        jsq.checkAnswer($(this).val());
     });
 });
-$('#next').click(function(e) {
+
+$('#next').click(function (e) {
     e.preventDefault();
-    if (selectedopt) {
+    var selectedRadio = $('input[name=option]:checked');
+    if (selectedRadio.length) {
+        selectedopt = selectedRadio.val();
         jsq.checkAnswer(selectedopt);
     }
     jsq.changeQuestion(1);
 });
-$('#previous').click(function(e) {
+
+
+$('#previous').click(function (e) {
     e.preventDefault();
     if (selectedopt) {
         jsq.checkAnswer(selectedopt);
